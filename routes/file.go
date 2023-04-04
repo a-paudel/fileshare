@@ -20,7 +20,7 @@ func RegisterFileRoutes(app *echo.Echo) {
 
 // upload get
 func uploadGet(c echo.Context) error {
-	return c.Render(200, "upload.html", nil)
+	return c.Render(200, "upload", nil)
 }
 
 // upload post
@@ -29,6 +29,11 @@ func uploadPost(c echo.Context) error {
 	if err != nil {
 		return c.String(400, "file not found"+"\n"+err.Error())
 	}
+	// file size limit 100MB
+	if htmlFile.Size > 100*1000*1000 {
+		return c.Render(400, "errors/file_size", nil)
+	}
+
 	src, err := htmlFile.Open()
 	if err != nil {
 		return c.String(400, "file could not be opened"+"\n"+err.Error())
@@ -54,7 +59,7 @@ func view(c echo.Context) error {
 	err := models.Db.Where("code = ?", c.Param("code")).First(&file).Error
 
 	if err != nil {
-		return c.String(404, "file not found")
+		return c.Render(404, "errors/not_found", nil)
 
 	}
 	var expiryDate = file.CreatedAt.Add(time.Hour * 24)
@@ -65,7 +70,7 @@ func view(c echo.Context) error {
 		"downloadUrl": downloadUrl,
 	}
 
-	return c.Render(200, "view.html", data)
+	return c.Render(200, "view", data)
 }
 
 // download
@@ -75,7 +80,7 @@ func download(c echo.Context) error {
 
 	err := models.Db.Where("code = ?", c.Param("code")).First(&file).Error
 	if err != nil {
-		return c.String(404, "file not found")
+		return c.Render(404, "errors/not_found", nil)
 	}
 
 	defer func() {

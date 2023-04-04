@@ -40,8 +40,9 @@ func RegisterTemplates(app *echo.Echo) {
 		if path == "base.html" {
 			return nil
 		}
+		name := strings.TrimSuffix(path, ".html")
 
-		templateMap[path] = template.Must(template.ParseFS(subdir, path, "base.html"))
+		templateMap[name] = template.Must(template.ParseFS(subdir, path, "base.html"))
 		return nil
 	})
 

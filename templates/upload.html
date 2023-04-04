@@ -4,7 +4,8 @@
     <form method="post" enctype="multipart/form-data">
         <input type="file" id="file_input" name="file" hidden>
         <div id="drop_zone" class="">
-            <p>Drop file here to upload</p>
+            <h2>Drop file here to upload</h2>
+            <h4>Only files up to 100MB can be uploaded</h4>
         </div>
         <input type="submit" id="submit_button" hidden>
     </form>
@@ -20,6 +21,11 @@
     }
 
     h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
     p {
         text-align: center;
         margin: 0;
@@ -32,6 +38,7 @@
         border: 2px dashed gray;
         border-radius: 1rem;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         user-select: none;

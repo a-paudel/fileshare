@@ -1,0 +1,25 @@
+{{block "content" .}}
+<div class="container">
+    <h1>The file you are looking for can't be found.</h1>
+    <h3>The code may be incorrect or it may have expired</h3>
+    <a href="/" role="button">Upload new file</a>
+</div>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        gap: 1rem;
+    }
+
+    h1,
+    h2,
+    h3 {
+        margin: 0;
+    }
+</style>
+
+{{end}}

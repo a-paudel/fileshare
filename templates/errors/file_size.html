@@ -1,0 +1,25 @@
+{{block "content" .}}
+<div class="container">
+    <h1>That file is too big!</h1>
+    <h3>We only support files up to 100MB</h3>
+    <a href="/" role="button">Upload new file</a>
+</div>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        gap: 1rem;
+    }
+
+    h1,
+    h2,
+    h3 {
+        margin: 0;
+    }
+</style>
+
+{{end}}
