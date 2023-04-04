@@ -2,12 +2,15 @@
 <div class="container">
     <h1>File Share</h1>
     <form method="post" enctype="multipart/form-data">
-        <input type="file" id="file_input" name="file" hidden>
-        <div id="drop_zone" class="">
-            <h2>Drop file here to upload</h2>
-            <h4>Only files up to 100MB can be uploaded</h4>
+        <input type="file" id="file_input" name="file" hidden />
+        <div class="drop-zone-container">
+            <progress value="0" max="100" id="drop_zone" class=""></progress>
+            <div class="info">
+                <h2>Drop file here to upload</h2>
+                <h4>Only files up to 100MB can be uploaded</h4>
+            </div>
         </div>
-        <input type="submit" id="submit_button" hidden>
+        <input type="submit" id="submit_button" hidden />
     </form>
     <p>Files are only stored for 24 hours or until first download</p>
 </div>
@@ -31,7 +34,20 @@
         margin: 0;
     }
 
+    .drop-zone-container {
+        display: grid;
+        align-items: center;
+    }
+
+    .info {
+        grid-column: 1;
+        grid-row: 1;
+        pointer-events: none;
+    }
+
     #drop_zone {
+        grid-column: 1;
+        grid-row: 1;
         width: 100%;
         height: 65vh;
         /* background-color: gray; */
@@ -51,10 +67,12 @@
     }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
 <script>
-    var /** HTMLDivElement */dropZone = document.getElementById('drop_zone');
-    var /**HTMLInputElement*/ fileInput = document.getElementById('file_input');
-    var /**HTMLFormElement*/ form = document.querySelector('form');
+    let /** HTMLDivElement */ dropZone = document.getElementById("drop_zone");
+    let /**HTMLInputElement*/ fileInput = document.getElementById("file_input");
+    let /**HTMLFormElement*/ form = document.querySelector("form");
+    let /**HTMLProgressElement*/ progressBar = document.querySelector("progress");
 
     // disable drag enter and drag over
     /**
@@ -62,16 +80,16 @@
      * */
     dropZone.ondragenter = dropZone.ondragover = function (event) {
         event.preventDefault();
-        dropZone.classList.add("glow")
-    }
+        dropZone.classList.add("glow");
+    };
 
     /**
      * @param {DragEvent} event
-    */
+     */
     dropZone.ondragend = dropZone.ondragleave = function (event) {
         event.preventDefault();
-        dropZone.classList.remove("glow")
-    }
+        dropZone.classList.remove("glow");
+    };
 
     /**
      * @param {DragEvent} event
@@ -79,35 +97,59 @@
     dropZone.ondrop = function (event) {
         event.preventDefault();
         // keep only the first file
-        fileInput.files = event.dataTransfer.files
-        dropZone.classList.remove("glow")
-        form.submit()
+        fileInput.files = event.dataTransfer.files;
+        dropZone.classList.remove("glow");
+        submitHandler();
         // submitButton.click()
-    }
+    };
 
     /**
      * @param {MouseEvent} event
      */
     dropZone.onclick = function (event) {
-        event.preventDefault()
+        event.preventDefault();
 
-        fileInput.click()
+        fileInput.click();
         // alert("clicked")
-    }
+    };
 
     // submit form on file input change
     /**
      * @param {InputEvent} event
-    */
+     */
     fileInput.oninput = function (event) {
-        event.preventDefault()
-        form.submit()
+        event.preventDefault();
+        submitHandler();
         // submitButton.click()
-    }
+    };
 
     document.onload = function () {
         // clear fileinput file list
-        form.reset()
+        form.reset();
+    };
+
+    async function submitHandler() {
+        let formdata = new FormData()
+        let file = fileInput.files[0]
+        formdata.append("file", file)
+        let url = window.location.href
+        let resp = await axios.post(url, formdata, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            },
+            onUploadProgress: progressHandler
+        },
+        );
+        let newUrl = resp.data;
+        window.location.href = newUrl;
+    }
+
+    /**
+     * @param {ProgressEvent} progressEvent
+    */
+    function progressHandler(progressEvent) {
+        let value = progressEvent.loaded / progressEvent.total * 100
+        progressBar.value = value
     }
 </script>
 {{end}}

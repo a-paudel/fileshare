@@ -16,6 +16,7 @@ func RegisterFileRoutes(app *echo.Echo) {
 
 	router.GET("/:code", view)
 	router.GET("/:code/download", download)
+	router.GET("/error/:error", showError)
 }
 
 // upload get
@@ -31,7 +32,9 @@ func uploadPost(c echo.Context) error {
 	}
 	// file size limit 100MB
 	if htmlFile.Size > 100*1000*1000 {
-		return c.Render(400, "errors/file_size", nil)
+		url := c.Echo().URL(showError, "file_size")
+		return c.String(200, url)
+		// return c.Render(400, "errors/file_size", nil)
 	}
 
 	src, err := htmlFile.Open()
@@ -49,7 +52,7 @@ func uploadPost(c echo.Context) error {
 	file.Create(htmlFile.Filename, content)
 
 	var url = c.Echo().URL(view, file.Code)
-	return c.Redirect(302, url)
+	return c.String(200, url)
 }
 
 // view
@@ -89,4 +92,14 @@ func download(c echo.Context) error {
 	}()
 
 	return c.Attachment(file.Path, file.Name)
+}
+
+func showError(c echo.Context) error {
+	error := c.Param("error")
+	if error == "file_size" {
+		return c.Render(400, "errors/file_size", nil)
+	} else if error == "not_found" {
+		return c.Render(404, "errors/not_found", nil)
+	}
+	return c.Redirect(302, "/")
 }
