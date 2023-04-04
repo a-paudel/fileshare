@@ -9,6 +9,7 @@ import (
 func startServer() {
 	app := echo.New()
 	app.Pre(middleware.RemoveTrailingSlash())
+	app.Pre(middleware.HTTPSNonWWWRedirect())
 	app.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${time_rfc3339}\t${status}\t${method}\t${uri}\t${latency_human}\n",
 	}))

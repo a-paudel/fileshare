@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  app:
+    container_name: fileshare
+    restart: unless-stopped
+    image: ubuntu:22.04
+    command: bash -c "cd /app && ./fileshare"
+    volumes:
+      - ./data:/app/data
+      - ./files:/app/files
+      - ./fileshare:/app/fileshare
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fileshare.rule=Host(`file.paudel.me`)"
+      - "traefik.http.routers.fileshare.entrypoints=web,websecure"
+      - "traefik.http.routers.fileshare.tls.certresolver=le"
+
+    expose:
+      - 8000
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+
