@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"fileshare/models"
 	"os"
 	"time"
 
+	"github.com/a-paudel/fileshare/models"
 	"github.com/labstack/echo/v4"
 )
 

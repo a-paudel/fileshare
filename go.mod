@@ -1,4 +1,4 @@
-module fileshare
+module github.com/a-paudel/fileshare
 
 go 1.20
 
