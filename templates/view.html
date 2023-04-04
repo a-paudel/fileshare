@@ -1,0 +1,55 @@
+{{block "content" .}}
+<div class="container">
+    <h1>{{.file.Code}}</h1>
+    <h2>{{.file.Name}}</h2>
+    <div class="grid">
+        <a href="/" class="secondary" role="button">Upload new file</a>
+        <a href="{{.downloadUrl}}" role="button" id="download-button">Download</a>
+    </div>
+    <p>This file expires at {{.expiryDate}}</p>
+</div>
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        /* align-items: center; */
+        justify-content: center;
+        height: 100vh;
+        gap: 2rem;
+    }
+
+    h1,
+    h2,
+    p {
+        text-align: center;
+        margin: 0;
+    }
+
+    h1 {
+        background-color: #2b2d30;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        user-select: all;
+    }
+</style>
+
+<script>
+    let /**HTMLBodyElement*/ body = document.querySelector('body');
+    let /**HTMLHeadingElement*/ h1Tag = document.querySelector('h1');
+    let /**HTMLAnchorElement*/ downloadButton = document.querySelector('#download-button');
+
+
+    body.onload = function (event) {
+        let url = new URL(window.location.href);
+        // remove http or https
+        url.protocol = '';
+        h1Tag.textContent = url.toString();
+    }
+
+    downloadButton.onclick = function (event) {
+        setTimeout(function () {
+            window.location.href = "/"
+        }, 500)
+    }
+</script>
+{{end}}

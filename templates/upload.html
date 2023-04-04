@@ -1,0 +1,106 @@
+{{block "content" .}}
+<div class="container">
+    <h1>File Share</h1>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" id="file_input" name="file" hidden>
+        <div id="drop_zone" class="">
+            <p>Drop file here to upload</p>
+        </div>
+        <input type="submit" id="submit_button" hidden>
+    </form>
+    <p>Files are only stored for 24 hours or until first download</p>
+</div>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    h1,
+    p {
+        text-align: center;
+        margin: 0;
+    }
+
+    #drop_zone {
+        width: 100%;
+        height: 65vh;
+        /* background-color: gray; */
+        border: 2px dashed gray;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        cursor: pointer;
+    }
+
+    .glow {
+        box-shadow: 0rem 0rem 5rem steelblue inset;
+        transition: all 0.2s;
+    }
+</style>
+
+<script>
+    var /** HTMLDivElement */dropZone = document.getElementById('drop_zone');
+    var /**HTMLInputElement*/ fileInput = document.getElementById('file_input');
+    var /**HTMLFormElement*/ form = document.querySelector('form');
+
+    // disable drag enter and drag over
+    /**
+     * @param {DragEvent} event
+     * */
+    dropZone.ondragenter = dropZone.ondragover = function (event) {
+        event.preventDefault();
+        dropZone.classList.add("glow")
+    }
+
+    /**
+     * @param {DragEvent} event
+    */
+    dropZone.ondragend = dropZone.ondragleave = function (event) {
+        event.preventDefault();
+        dropZone.classList.remove("glow")
+    }
+
+    /**
+     * @param {DragEvent} event
+     */
+    dropZone.ondrop = function (event) {
+        event.preventDefault();
+        // keep only the first file
+        fileInput.files = event.dataTransfer.files
+        dropZone.classList.remove("glow")
+        form.submit()
+        // submitButton.click()
+    }
+
+    /**
+     * @param {MouseEvent} event
+     */
+    dropZone.onclick = function (event) {
+        event.preventDefault()
+
+        fileInput.click()
+        // alert("clicked")
+    }
+
+    // submit form on file input change
+    /**
+     * @param {InputEvent} event
+    */
+    fileInput.oninput = function (event) {
+        event.preventDefault()
+        form.submit()
+        // submitButton.click()
+    }
+
+    document.onload = function () {
+        // clear fileinput file list
+        form.reset()
+    }
+</script>
+{{end}}
