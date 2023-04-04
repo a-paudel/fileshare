@@ -96,7 +96,6 @@
      */
     dropZone.ondrop = function (event) {
         event.preventDefault();
-        // keep only the first file
         fileInput.files = event.dataTransfer.files;
         dropZone.classList.remove("glow");
         submitHandler();
@@ -130,7 +129,15 @@
 
     async function submitHandler() {
         let formdata = new FormData()
-        let file = fileInput.files[0]
+        let /**File*/ file = fileInput.files[0]
+        let size = file.size
+
+        // check if larger than 100mb
+        if (size > 100 * 1000 * 1000) {
+            alert("File is too large")
+            return
+        }
+
         formdata.append("file", file)
         let url = window.location.href
         let resp = await axios.post(url, formdata, {
