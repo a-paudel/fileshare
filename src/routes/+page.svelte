@@ -44,7 +44,9 @@
     on:dragleave={() => (dragging = false)}
     on:drop={() => (dragging = false)}
   >
-    <span class="z10 text-xl font-bold text-dark"> Choose a file </span>
+    <span class="z10 text-xl font-bold text-dark pointer-events-none">
+      Choose a file
+    </span>
     <progress
       max="100"
       value="0"
