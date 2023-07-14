@@ -47,7 +47,7 @@
     <span class="z10 text-xl font-bold text-dark"> Choose a file </span>
     <progress
       max="100"
-      value="50"
+      value="0"
       class="wfull hfull absolute top-0 left-0 z0 m0 p0"
       bind:this={progressBar}
     />
