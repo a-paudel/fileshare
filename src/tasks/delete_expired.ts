@@ -1,8 +1,7 @@
-import { db } from "../../../../database";
-import { s3 } from "../../../../lib/s3";
-import type { RequestHandler } from "./$types";
+import { db } from "../database";
+import { s3 } from "../lib/s3";
 
-export const GET: RequestHandler = async () => {
+export async function DeleteExpiredFiles() {
   let files = await db.file.findMany({
     where: {
       createdAt: {
@@ -24,6 +23,4 @@ export const GET: RequestHandler = async () => {
       },
     },
   });
-
-  return new Response("ok");
-};
+}
