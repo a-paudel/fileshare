@@ -35,8 +35,8 @@ export const POST: RequestHandler = async ({ request }) => {
     return new Response(JSON.stringify(data.error.formErrors), { status: 400 });
   }
   let { filename, filesize } = data.data;
-  if (filesize > 1024 * 1024 * 100) {
-    // 100mb
+  if (filesize > 1024 * 1024 * 1024 * 1) {
+    // 1gb
     return new Response(JSON.stringify("file is too large"), { status: 403 });
   }
 
