@@ -1,4 +1,4 @@
-import minio from "minio";
+import * as minio from "minio";
 
 let endpoint = process.env.S3_ENDPOINT ?? "";
 let accessKey = process.env.S3_ACCESS_KEY ?? "";
