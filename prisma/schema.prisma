@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DB_URL")
 }
 
 model file {
@@ -16,4 +16,5 @@ model file {
   updatedAt DateTime @updatedAt
   code      String   @unique
   name      String
+  url       String
 }

@@ -1,30 +1,45 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { browser } from "$app/environment";
   import { goto } from "$app/navigation";
   import Axios from "axios";
 
   let dragging = false;
+  let uploading = false;
 
-  let form: HTMLFormElement;
+  let input: HTMLInputElement;
   async function uploadHandler() {
-    // form.submit();
-    // submit using fetch
-    let data = new FormData(form);
-    let resp = await Axios.post($page.url.toString(), data, {
-      onUploadProgress: (e) => {
-        updateProgress((e.loaded / (e.total ?? 1)) * 100);
+    uploading = false;
+    let files = input.files;
+    if (!files) return;
+    let file = files[0];
+    let filename = file.name;
+    let filesize = file.size;
+    let data = { filename, filesize };
+
+    let resp = await Axios.post($page.url.toString(), data);
+    let respData = resp.data as { uploadurl: string; code: string };
+
+    // put to uploadurl
+    uploading = true;
+    await Axios.put(respData.uploadurl, file, {
+      onUploadProgress(e) {
+        progressValue = (e.loaded / (e.total ?? 1)) * 100;
       },
     });
+    uploading = false;
 
-    let json = resp.data;
-    let url = json.location as string;
-    goto(url);
+    // redirect url
+    let redirectUrl = `/${respData.code}`;
+    goto(redirectUrl);
   }
 
-  let progressBar: HTMLProgressElement;
-  function updateProgress(value: number) {
-    progressBar.value = value;
+  let progressBar: HTMLDivElement;
+  let progressValue = 0;
+
+  $: {
+    if (progressBar) {
+      progressBar.style.width = `${progressValue}%`;
+    }
   }
 </script>
 
@@ -32,7 +47,6 @@
   class="flex flex-col h-screen items-center justify-center m0"
   method="POST"
   enctype="multipart/form-data"
-  bind:this={form}
 >
   <h1>File Share</h1>
 
@@ -45,12 +59,12 @@
     on:drop={() => (dragging = false)}
   >
     <span class="z10 text-xl font-bold text-dark pointer-events-none">
-      Choose a file
+      {uploading ? "Uploading" : "Choose a file"}
     </span>
-    <progress
-      max="100"
-      value="0"
-      class="wfull hfull absolute top-0 left-0 z0 m0 p0"
+    <div
+      class="absolute top-0 left-0 h-full bg-green rounded"
+      role="progressbar"
+      aria-valuenow={progressValue}
       bind:this={progressBar}
     />
     <input
@@ -58,24 +72,10 @@
       name="file"
       class="absolute top-0 left-0 h-full w-full opacity-0"
       on:change={uploadHandler}
+      bind:this={input}
     />
   </label>
   <noscript>
     <button type="submit">Upload</button>
   </noscript>
 </form>
-
-<style>
-  progress {
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  ::-webkit-progress-bar {
-    background-color: transparent;
-    border-radius: 0.5rem;
-  }
-  ::-webkit-progress-value {
-    background-color: rgb(59, 130, 246);
-    border-radius: 0.5rem;
-  }
-</style>

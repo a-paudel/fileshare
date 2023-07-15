@@ -29,7 +29,7 @@
   </code>
   <h2>{data.file.name}</h2>
   <a
-    href="/{data.file.code}/{data.file.name}"
+    href={data.file.url}
     class="decoration-none bg-blue-5 hover:bg-blue-6 text-white p4 rounded-md"
   >
     Download File
