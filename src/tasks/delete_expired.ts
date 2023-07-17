@@ -13,7 +13,7 @@ export async function DeleteExpiredFiles() {
 
   for (const file of files) {
     // delete from s3
-    await s3.client.removeObject(s3.bucket, `${file.code}/${file.name}`);
+    await s3.client.removeObject(s3.bucket, `${file.code}`);
   }
   // delete from the database
   await db.file.deleteMany({
