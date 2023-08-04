@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  fileshare_backend:
+    container_name: fileshare_backend
+    restart: unless-stopped
+    build: ./fileshare.API
+    environment:
+      - DB_URL=./data/fileshare.db 
+    volumes:
+      - ./data:/app/data
+    networks:
+      - production
+    
+  fileshare_frontend:
+    container_name: fileshare_frontend
+    restart: unless-stopped
+    depends_on: 
+      - fileshare_backend
+    build: ./fileshare.WEB
+    environment:
+      - PUBLIC_API_URL=fileshare_backend:8000/api
+    networks:
+      - production
+      
+networks:
+  production:
+    external: true
+
+  
