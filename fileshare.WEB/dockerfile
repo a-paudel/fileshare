@@ -1,0 +1,10 @@
+FROM node:20-alpine as builder
+WORKDIR /app
+COPY . .
+RUN npm i -g pnpm
+RUN pnpm i
+RUN pnpm build
+
+FROM caddy:2-alpine
+COPY --from=builder /app/build /www
+COPY ./Caddyfile /etc/caddy/Caddyfile
