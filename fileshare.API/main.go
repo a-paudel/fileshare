@@ -38,7 +38,6 @@ func generateCode() string {
 func deleteExpiredFilesMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// get list of expired files
-		fmt.Println("Deleting expired files")
 		expiredFiles, _ := models.Q.GetExpiredFiles(ctx)
 		// for each file delete from disk and db
 		for _, file := range expiredFiles {

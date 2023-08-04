@@ -1,9 +1,9 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import { PUBLIC_API_URL } from "$env/static/public";
   import { onMount } from "svelte";
   import { sizeFormatter } from "human-readable";
+  import { API_URL } from "../../constants";
 
   type FileType = {
     CreatedAt: string;
@@ -18,7 +18,7 @@
   onMount(async () => {
     // get file from api if not exists redirect to home
     let code = $page.params.code;
-    let resp = await fetch(`${PUBLIC_API_URL}/files/${code}`);
+    let resp = await fetch(`${API_URL}/files/${code}`);
     if (!resp.ok) {
       goto("/");
     }
@@ -55,7 +55,7 @@
       on:click={copyUrl}>{$page.url}</pre>
     <h2 class="m0">{file.Filename}</h2>
     <a
-      href="{PUBLIC_API_URL}/files/{file?.Code}/download"
+      href="{API_URL}/files/{file?.Code}/download"
       class="button bg-gray-7 text-light"
       on:click={linkClickHandler}
     >

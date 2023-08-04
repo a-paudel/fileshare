@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { PUBLIC_API_URL } from "$env/static/public";
   import Axios from "axios";
+  import { API_URL } from "../constants";
 
   let fileInput: HTMLInputElement;
   let progress = 0;
@@ -27,7 +27,7 @@
     let formData = new FormData();
     formData.append("file", file);
 
-    let url = `${PUBLIC_API_URL}/files`;
+    let url = `${API_URL}/files`;
     let resp = await Axios.postForm(url, formData, {
       onUploadProgress: (e) => {
         progress = Math.round((e.loaded / (e.total ?? 1)) * 100);
